@@ -12,6 +12,7 @@ Widget cameraTogglesRowWidget(
   final List<Widget> toggles = [];
 
   void onChanged(CameraDescription? description) {
+    print(description);
     if (description == null) {
       return;
     }
@@ -37,6 +38,5 @@ Widget cameraTogglesRowWidget(
       );
     }
   }
-
   return Row(children: toggles);
 }

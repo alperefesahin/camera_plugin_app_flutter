@@ -105,7 +105,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
 
     final CameraController cameraController = CameraController(
       cameraDescription,
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
       imageFormatGroup: ImageFormatGroup.jpeg,
     );
 
@@ -142,20 +142,22 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
     }
   }
 
-  void onTakePictureButtonPressed() {
-    takePicture().then((XFile? file) {
-      if (mounted) {
-        if (file != null) {
-          print('🎃🎃🎃🎃🎃🎃🎃 Picture saved to ${file.path}');
-        }
-      }
-    });
+  Future onTakePictureButtonPressed() async {
+    print("+++++1");
+    final picture = await takePicture();
+    print("PICTURE!!!!!: " + picture.toString());
+    if (picture != null) {
+      print('🎃🎃🎃🎃🎃🎃🎃 Picture saved to ${picture.path}');
+    }
   }
 
   Future<XFile?> takePicture() async {
     final CameraController? cameraController = controller;
-
-    if (cameraController!.value.isTakingPicture) {
+    if (cameraController == null || !cameraController.value.isInitialized) {
+      print('!!!!!!!!!!!! Error: select a camera first.');
+      return null;
+    }
+    if (cameraController.value.isTakingPicture) {
       // A capture is already pending, do nothing.
       return null;
     }
@@ -164,7 +166,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       final XFile file = await cameraController.takePicture();
       return file;
     } on CameraException catch (e) {
-      print(e);
+      print("CAMERA ERROR: " + e.toString());
       return null;
     }
   }

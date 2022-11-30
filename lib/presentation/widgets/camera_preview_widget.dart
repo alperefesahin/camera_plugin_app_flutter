@@ -13,15 +13,6 @@ Widget cameraPreviewWidget(CameraController? controller) {
       ),
     );
   } else {
-    return CameraPreview(
-      controller,
-      child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-          );
-        },
-      ),
-    );
+    return CameraPreview(controller);
   }
 }
