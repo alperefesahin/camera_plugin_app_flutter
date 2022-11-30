@@ -1,5 +1,5 @@
 import 'package:camera/camera.dart';
-import 'package:camera_plugin_app/camera_example_home.dart';
+import 'package:camera_plugin_app/presentation/camera_example_home.dart';
 import 'package:flutter/material.dart';
 
 class CameraApp extends StatelessWidget {

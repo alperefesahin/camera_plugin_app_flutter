@@ -1,9 +1,13 @@
-import 'dart:io';
+// ignore_for_file: avoid_print
 
 import 'package:camera/camera.dart';
-import 'package:camera_plugin_app/widgets/camera_lens_icon.dart';
+import 'package:camera_plugin_app/presentation/widgets/camera_preview_widget.dart';
+import 'package:camera_plugin_app/presentation/widgets/camera_toggles_row_widget.dart';
+import 'package:camera_plugin_app/presentation/widgets/capture_control_row_widget.dart';
+import 'package:camera_plugin_app/presentation/widgets/thumbnail_widget.dart';
 import 'package:flutter/material.dart';
 
+// functions exist below, use your own state management solution and carry functions to there.
 class CameraExampleHome extends StatefulWidget {
   const CameraExampleHome({Key? key, required this.cameras}) : super(key: key);
 
@@ -67,113 +71,24 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
                 child: Center(
-                  child: _cameraPreviewWidget(),
+                  child: cameraPreviewWidget(controller),
                 ),
               ),
             ),
           ),
-          _captureControlRowWidget(),
+          captureControlRowWidget(controller, onTakePictureButtonPressed),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
               children: [
-                _cameraTogglesRowWidget(),
-                _thumbnailWidget(),
+                cameraTogglesRowWidget(controller, widget.cameras, onNewCameraSelected),
+                thumbnailWidget(imageFile),
               ],
             ),
           ),
         ],
       ),
     );
-  }
-
-  /// Display the preview from the camera (or a message if the preview is not available).
-  Widget _cameraPreviewWidget() {
-    final CameraController? cameraController = controller;
-
-    if (cameraController == null || !cameraController.value.isInitialized) {
-      return const Text(
-        'Tap a camera',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 24.0,
-          fontWeight: FontWeight.w900,
-        ),
-      );
-    } else {
-      return CameraPreview(
-        controller!,
-        child: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-          );
-        }),
-      );
-    }
-  }
-
-  /// Display the thumbnail of the captured image or video.
-  Widget _thumbnailWidget() {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (imageFile == null)
-              Container()
-            else
-              SizedBox(width: 64.0, height: 64.0, child: Image.file(File(imageFile!.path)))
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Display the control bar with buttons to take pictures and record videos.
-  Widget _captureControlRowWidget() {
-    final CameraController? cameraController = controller;
-
-    return IconButton(
-      icon: const Icon(Icons.camera_alt),
-      color: Colors.blue,
-      onPressed: cameraController != null && cameraController.value.isInitialized
-          ? onTakePictureButtonPressed
-          : null,
-    );
-  }
-
-  Widget _cameraTogglesRowWidget() {
-    final List<Widget> toggles = [];
-
-    void onChanged(CameraDescription? description) {
-      if (description == null) {
-        return;
-      }
-
-      onNewCameraSelected(description);
-    }
-
-    if (widget.cameras.isEmpty) {
-      print("Cameras empty");
-      return const Text('None');
-    } else {
-      for (final CameraDescription cameraDescription in widget.cameras) {
-        toggles.add(
-          SizedBox(
-            width: 90.0,
-            child: RadioListTile<CameraDescription>(
-              title: Icon(cameraLensIcon(cameraDescription.lensDirection)),
-              groupValue: controller?.description,
-              value: cameraDescription,
-              onChanged: onChanged,
-            ),
-          ),
-        );
-      }
-    }
-
-    return Row(children: toggles);
   }
 
   Future<void> onNewCameraSelected(CameraDescription cameraDescription) async {
