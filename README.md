@@ -1,16 +1,6 @@
 # camera_plugin_app
 
-A new Flutter project.
+* For now, this repository has only camera feature without video recording etc. The codes are coming from the official camera plugin itself, and it is simplified version of it. Feel free to use it.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Important Note
+* If you want to use camera plugin, you need to test on the real devices. For the Android emulator, the front camera work as well, but back camera does not work as expected. If you try to use on your "real" device, then there will be no any issues. So, use this plugin in your code base, but test it on the real device!
